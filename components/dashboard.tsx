@@ -17,10 +17,37 @@ import { LineChartIcon } from "@/components/icons/LineChartIcon";
 import { MenuIcon } from "@/components/icons/MenuIcon";
 import { Package2Icon } from "@/components/icons/Package2Icon";
 import { LineChart } from "@/components/charts/LineChart";
+import { useEffect, useState } from 'react';
 
 
 
 export default function Component() {
+  const [customerCount, setCustomerCount] = useState(0);
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/customers/count/')
+      .then(response => response.json())
+      .then(data => setCustomerCount(data.total_customers))
+      .catch(error => console.error('Error fetching customer count:', error));
+  }, []);
+
+  const [transactionCount, setTransactionCount] = useState(0);
+
+  useEffect(() =>{
+    fetch('http://127.0.0.1:8000/transactions/count/')
+     .then(response => response.json())
+     .then(data => setTransactionCount(data.total_transactions))
+     .catch(error => console.error('Error fetching transaction count:', error));
+  }, []);
+
+  const [transactionAmount, setTransactionAmount] = useState(0);
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/transactions/amount')
+    .then(response => response.json())
+    .then(data => setTransactionAmount(data.sum_transactions))
+    .catch(error => console.error('Error fetching transaction amount:', error));
+  }, []);
+
   return (
     <div key="1" className="grid min-h-screen w-full grid-cols-[280px_1fr] dark:bg-gray-950">
       <div className="hidden border-r bg-gray-100/40 dark:bg-gray-800/40 lg:block">
@@ -156,7 +183,7 @@ export default function Component() {
               <Card>
                 <CardHeader>
                   <CardDescription>Total Transaction Amount</CardDescription>
-                  <CardTitle>$2,389,000</CardTitle>
+                  <CardTitle>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(transactionAmount)}</CardTitle>
                 </CardHeader>
               </Card>
               <Card>
@@ -167,14 +194,14 @@ export default function Component() {
               </Card>
               <Card>
                 <CardHeader>
-                  <CardDescription>Latest Week Gross Volume</CardDescription>
-                  <CardTitle>$345,678</CardTitle>
+                  <CardDescription>Total Transaction Count</CardDescription>
+                  <CardTitle>{transactionCount}</CardTitle>
                 </CardHeader>
               </Card>
               <Card>
                 <CardHeader>
-                  <CardDescription>Total Transaction Count</CardDescription>
-                  <CardTitle>12,345</CardTitle>
+                  <CardDescription>Total Customer Count</CardDescription>
+                  <CardTitle>{customerCount}</CardTitle>
                 </CardHeader>
               </Card>
             </div>
@@ -252,7 +279,7 @@ export default function Component() {
       </div>
     </div>
   );
-}
+};
 
 
 
