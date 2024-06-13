@@ -1,51 +1,46 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/P2sGW33y9oU
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import { Card, CardHeader, CardDescription, CardTitle, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-
 import { BellIcon } from "@/components/icons/BellIcon";
-import { CalendarClockIcon } from "@/components/icons/CalendarClockIcon";
+import { Package2Icon } from "@/components/icons/Package2Icon";
 import { HomeIcon } from "@/components/icons/HomeIcon";
 import { LineChartIcon } from "@/components/icons/LineChartIcon";
 import { MenuIcon } from "@/components/icons/MenuIcon";
-import { Package2Icon } from "@/components/icons/Package2Icon";
 import { LineChart } from "@/components/charts/LineChart";
 import { useEffect, useState } from 'react';
-
-
+import { DatePickerWithRange } from "@/components/ui/datepicker";
+import LiveFeed from "@/components/layout/LiveFeed";
+import axios from 'axios';
 
 export default function Component() {
   const [customerCount, setCustomerCount] = useState(0);
+  const [transactionCount, setTransactionCount] = useState(0);
+  const [transactionAmount, setTransactionAmount] = useState('MM-DD-YYYY');
+  const [highestVolumeDay, setHighestVolumeDay] = useState(0);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/customers/count/')
-      .then(response => response.json())
-      .then(data => setCustomerCount(data.total_customers))
+    axios.get('http://127.0.0.1:8000/customers/count/')
+      .then(response => setCustomerCount(response.data.total_customers))
       .catch(error => console.error('Error fetching customer count:', error));
   }, []);
 
-  const [transactionCount, setTransactionCount] = useState(0);
-
-  useEffect(() =>{
-    fetch('http://127.0.0.1:8000/transactions/count/')
-     .then(response => response.json())
-     .then(data => setTransactionCount(data.total_transactions))
-     .catch(error => console.error('Error fetching transaction count:', error));
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/transactions/count/')
+      .then(response => setTransactionCount(response.data.total_transactions))
+      .catch(error => console.error('Error fetching transaction count:', error));
   }, []);
 
-  const [transactionAmount, setTransactionAmount] = useState(0);
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/transactions/amount')
-    .then(response => response.json())
-    .then(data => setTransactionAmount(data.sum_transactions))
-    .catch(error => console.error('Error fetching transaction amount:', error));
+    axios.get('http://127.0.0.1:8000/transactions/amount')
+      .then(response => setTransactionAmount(response.data.sum_transactions))
+      .catch(error => console.error('Error fetching transaction amount:', error));
+  }, []);
+
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/highest_volume_day')
+      .then(response => setHighestVolumeDay(response.data.highest_volume_day))
+      .catch(error => console.error('Error fetching highest volume day:', error));
   }, []);
 
   return (
@@ -157,39 +152,23 @@ export default function Component() {
               </Link>
             </nav>
           </div>
-          <Popover>
-            <PopoverTrigger asChild />
-            <PopoverContent align="end" className="w-auto p-0">
-              <Calendar initialFocus mode="range" numberOfMonths={2} />
-            </PopoverContent>
-          </Popover>
         </header>
         <main className="flex flex-1 flex-col gap-6 p-6 md:p-8">
           <div className="flex items-center justify-end mb-6">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button className="w-[280px] justify-start text-left font-normal" variant="outline">
-                  <CalendarClockIcon className="mr-2 h-4 w-4" />
-                  June 01, 2023 - June 30, 2023
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent align="end" className="w-auto p-0">
-                <Calendar initialFocus mode="range" numberOfMonths={2} />
-              </PopoverContent>
-            </Popover>
+            <DatePickerWithRange className="w-[280px]"/>
           </div>
           <div className="grid flex-1 gap-6">
             <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
               <Card>
                 <CardHeader>
                   <CardDescription>Total Transaction Amount</CardDescription>
-                  <CardTitle>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(transactionAmount)}</CardTitle>
+                  <CardTitle>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(parseFloat(transactionAmount))}</CardTitle>
                 </CardHeader>
               </Card>
               <Card>
                 <CardHeader>
                   <CardDescription>Highest Volume Day</CardDescription>
-                  <CardTitle>June 15, 2023</CardTitle>
+                  <CardTitle>{highestVolumeDay}</CardTitle>
                 </CardHeader>
               </Card>
               <Card>
@@ -214,65 +193,7 @@ export default function Component() {
                   <LineChart className="aspect-[16/9]" />
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Live Feed</CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-4 overflow-auto">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Avatar>
-                        <AvatarImage src="/placeholder.svg" alt="Avatar" />
-                        <AvatarFallback>JD</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">John Doe</div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">Purchased $125 item</div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">2 min ago</div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Avatar>
-                        <AvatarImage src="/placeholder.svg" alt="Avatar" />
-                        <AvatarFallback>JD</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">Jane Smith</div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">Purchased $89 item</div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">5 min ago</div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Avatar>
-                        <AvatarImage src="/placeholder.svg" alt="Avatar" />
-                        <AvatarFallback>JD</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">Bob Johnson</div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">Purchased $199 item</div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">10 min ago</div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Avatar>
-                        <AvatarImage src="/placeholder.svg" alt="Avatar" />
-                        <AvatarFallback>JD</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">Sarah Lee</div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">Purchased $75 item</div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">15 min ago</div>
-                  </div>
-                </CardContent>
-              </Card>
+              <LiveFeed />
             </div>
           </div>
         </main>
@@ -280,13 +201,3 @@ export default function Component() {
     </div>
   );
 };
-
-
-
-
-
-
-
-
-
-
