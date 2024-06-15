@@ -15,13 +15,17 @@ interface Transaction {
   created_at: string;
 }
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+console.log(apiUrl);
+
+
 const LiveFeed: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await axios.get(`f{apiUrl}/api/transactions/recent`);
+        const response = await axios.get(`${apiUrl}/api/transactions/recent`);
         setTransactions(response.data);
       } catch (error) {
         console.error('Error fetching transactions:', error);

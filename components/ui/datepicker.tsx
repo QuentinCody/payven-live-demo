@@ -1,9 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { addDays, format } from "date-fns"
+import { addDays as addDaysFn, format } from "date-fns"
 import { CalendarClockIcon } from "@/components/icons/CalendarClockIcon"
-import { DateRange } from "react-day-picker"
+import { DateRange as DateRangeType } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -14,13 +14,23 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+interface DatePickerWithRangeProps extends React.HTMLAttributes<HTMLDivElement> {
+  onDateChange: (range: DateRange | undefined) => void;
+}
+
 export function DatePickerWithRange({
   className,
-}: React.HTMLAttributes<HTMLDivElement>) {
+  onDateChange,
+}: DatePickerWithRangeProps) {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: addDays(new Date(), -7),
     to: new Date(),
   })
+
+  const handleDateChange = (newDate: DateRange | undefined) => {
+    setDate(newDate);
+    onDateChange(newDate);
+  }
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -55,7 +65,7 @@ export function DatePickerWithRange({
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={handleDateChange}
             numberOfMonths={2}
           />
         </PopoverContent>
@@ -63,3 +73,6 @@ export function DatePickerWithRange({
     </div>
   )
 }
+
+export const addDays = addDaysFn;
+export type DateRange = DateRangeType;

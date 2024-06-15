@@ -9,9 +9,10 @@ import { LineChartIcon } from "@/components/icons/LineChartIcon";
 import { MenuIcon } from "@/components/icons/MenuIcon";
 import { LineChart } from "@/components/charts/LineChart";
 import { useEffect, useState } from 'react';
-import { DatePickerWithRange } from "@/components/ui/datepicker";
+import { DatePickerWithRange, addDays, DateRange } from "@/components/ui/datepicker";
 import LiveFeed from "@/components/layout/LiveFeed";
 import axios from 'axios';
+import { format } from 'date-fns';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 console.log(apiUrl);
@@ -21,30 +22,48 @@ export default function Component() {
   const [transactionCount, setTransactionCount] = useState(0);
   const [transactionAmount, setTransactionAmount] = useState('MM-DD-YYYY');
   const [highestVolumeDay, setHighestVolumeDay] = useState(0);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: addDays(new Date(), -7),
+    to: new Date(),
+  });
 
-  useEffect(() => {
-    axios.get(`${apiUrl}/customers/count/`)
+  const fetchData = (startDate: string, endDate: string) => {
+    axios.get(`${apiUrl}/customers/count/`, {
+      params: { start_date: startDate, end_date: endDate }
+    })
       .then(response => setCustomerCount(response.data.total_customers))
       .catch(error => console.error('Error fetching customer count:', error));
-  }, []);
 
-  useEffect(() => {
-    axios.get(`${apiUrl}/transactions/count/`)
+    axios.get(`${apiUrl}/transactions/count/`, {
+      params: { start_date: startDate, end_date: endDate }
+    })
       .then(response => setTransactionCount(response.data.total_transactions))
       .catch(error => console.error('Error fetching transaction count:', error));
-  }, []);
 
-  useEffect(() => {
-    axios.get(`${apiUrl}/transactions/amount/`)
+    axios.get(`${apiUrl}/transactions/amount/`, {
+      params: { start_date: startDate, end_date: endDate }
+    })
       .then(response => setTransactionAmount(response.data.sum_transactions))
       .catch(error => console.error('Error fetching transaction amount:', error));
-  }, []);
 
-  useEffect(() => {
-    axios.get(`${apiUrl}/highest_volume_day/`)
+    axios.get(`${apiUrl}/highest_volume_day/`, {
+      params: { start_date: startDate, end_date: endDate }
+    })
       .then(response => setHighestVolumeDay(response.data.highest_volume_day))
       .catch(error => console.error('Error fetching highest volume day:', error));
-  }, []);
+  };
+
+  useEffect(() => {
+    if (dateRange?.from && dateRange.to) {
+      const startDate = format(dateRange.from, 'yyyy-MM-dd');
+      const endDate = format(dateRange.to, 'yyyy-MM-dd');
+      fetchData(startDate, endDate);
+    }
+  }, [dateRange]);
+
+  const handleDateChange = (range: DateRange | undefined) => {
+    setDateRange(range);
+  };
 
   return (
     <div key="1" className="grid min-h-screen w-full grid-cols-[280px_1fr] dark:bg-gray-950">
@@ -158,7 +177,7 @@ export default function Component() {
         </header>
         <main className="flex flex-1 flex-col gap-6 p-6 md:p-8">
           <div className="flex items-center justify-end mb-6">
-            <DatePickerWithRange className="w-[280px]"/>
+          <DatePickerWithRange className="w-[280px]" onDateChange={handleDateChange} />
           </div>
           <div className="grid flex-1 gap-6">
             <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
