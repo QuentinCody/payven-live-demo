@@ -13,7 +13,8 @@ import { DatePickerWithRange } from "@/components/ui/datepicker";
 import LiveFeed from "@/components/layout/LiveFeed";
 import axios from 'axios';
 
-const apiURL = process.env.NEXT_PUBLIC_API_URL;
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+console.log(apiUrl);
 
 export default function Component() {
   const [customerCount, setCustomerCount] = useState(0);
@@ -22,25 +23,25 @@ export default function Component() {
   const [highestVolumeDay, setHighestVolumeDay] = useState(0);
 
   useEffect(() => {
-    axios.get(`f{apiUrl}/customers/count/`)
+    axios.get(`${apiUrl}/customers/count/`)
       .then(response => setCustomerCount(response.data.total_customers))
       .catch(error => console.error('Error fetching customer count:', error));
   }, []);
 
   useEffect(() => {
-    axios.get(`f{apiUrl}/transactions/count/`)
+    axios.get(`${apiUrl}/transactions/count/`)
       .then(response => setTransactionCount(response.data.total_transactions))
       .catch(error => console.error('Error fetching transaction count:', error));
   }, []);
 
   useEffect(() => {
-    axios.get(`f{apiUrl}/transactions/amount/`)
+    axios.get(`${apiUrl}/transactions/amount/`)
       .then(response => setTransactionAmount(response.data.sum_transactions))
       .catch(error => console.error('Error fetching transaction amount:', error));
   }, []);
 
   useEffect(() => {
-    axios.get(`f{apiUrl}/highest_volume_day/`)
+    axios.get(`${apiUrl}/highest_volume_day/`)
       .then(response => setHighestVolumeDay(response.data.highest_volume_day))
       .catch(error => console.error('Error fetching highest volume day:', error));
   }, []);
@@ -166,6 +167,12 @@ export default function Component() {
                   <CardDescription>Total Transaction Amount</CardDescription>
                   <CardTitle>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(parseFloat(transactionAmount))}</CardTitle>
                 </CardHeader>
+                <CardContent>
+                <p className="text-xs text-muted-foreground">
+                +20.1% from last month
+                </p>
+                </CardContent>
+                  
               </Card>
               <Card>
                 <CardHeader>
