@@ -13,6 +13,8 @@ import { DatePickerWithRange } from "@/components/ui/datepicker";
 import LiveFeed from "@/components/layout/LiveFeed";
 import axios from 'axios';
 
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function Component() {
   const [customerCount, setCustomerCount] = useState(0);
   const [transactionCount, setTransactionCount] = useState(0);
@@ -20,25 +22,25 @@ export default function Component() {
   const [highestVolumeDay, setHighestVolumeDay] = useState(0);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/customers/count/')
+    axios.get(`f{apiUrl}/customers/count/`)
       .then(response => setCustomerCount(response.data.total_customers))
       .catch(error => console.error('Error fetching customer count:', error));
   }, []);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/transactions/count/')
+    axios.get(`f{apiUrl}/transactions/count/`)
       .then(response => setTransactionCount(response.data.total_transactions))
       .catch(error => console.error('Error fetching transaction count:', error));
   }, []);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/transactions/amount')
+    axios.get(`f{apiUrl}/transactions/amount/`)
       .then(response => setTransactionAmount(response.data.sum_transactions))
       .catch(error => console.error('Error fetching transaction amount:', error));
   }, []);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/highest_volume_day')
+    axios.get(`f{apiUrl}/highest_volume_day/`)
       .then(response => setHighestVolumeDay(response.data.highest_volume_day))
       .catch(error => console.error('Error fetching highest volume day:', error));
   }, []);

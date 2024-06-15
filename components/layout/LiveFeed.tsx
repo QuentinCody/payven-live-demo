@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { CircleUserRound } from 'lucide-react';
 
 interface Transaction {
   id: string;
   customer_id: string;
+  first_name: string;
+  last_name: string;
   amount_value: number;
+  amount_currency: string;
   status: string;
   created_at: string;
 }
@@ -17,7 +21,7 @@ const LiveFeed: React.FC = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/transactions/recent'); // Ensure this URL matches your FastAPI endpoint
+        const response = await axios.get(`f{apiUrl}/api/transactions/recent`);
         setTransactions(response.data);
       } catch (error) {
         console.error('Error fetching transactions:', error);
@@ -37,11 +41,10 @@ const LiveFeed: React.FC = () => {
           <div key={transaction.id} className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Avatar>
-                <AvatarImage src="/placeholder.svg" alt="Avatar" />
-                <AvatarFallback>{transaction.customer_id}</AvatarFallback>
+                <CircleUserRound aria-label="Avatar" className="w-10" />
               </Avatar>
               <div>
-                <div className="font-medium">{transaction.customer_id}</div>
+                <div className="font-medium">{`${transaction.first_name} ${transaction.last_name}`}</div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Purchased ${transaction.amount_value} ({transaction.status})
                 </div>
