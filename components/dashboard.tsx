@@ -1,11 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardDescription, CardTitle, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { BellIcon } from "@/components/icons/BellIcon";
-import { Package2Icon } from "@/components/icons/Package2Icon";
-import { HomeIcon } from "@/components/icons/HomeIcon";
-import { LineChartIcon } from "@/components/icons/LineChartIcon";
 import { MenuIcon } from "@/components/icons/MenuIcon";
 import { LineChart } from "@/components/charts/LineChart";
 import { useEffect, useState } from 'react';
@@ -13,6 +8,7 @@ import { DatePickerWithRange, addDays, DateRange } from "@/components/ui/datepic
 import LiveFeed from "@/components/layout/LiveFeed";
 import axios from 'axios';
 import { format } from 'date-fns';
+import SideBar from "@/components/layout/SideBar";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 console.log(apiUrl);
@@ -67,40 +63,7 @@ export default function Component() {
 
   return (
     <div key="1" className="grid min-h-screen w-full grid-cols-[280px_1fr] dark:bg-gray-950">
-      <div className="hidden border-r bg-gray-100/40 dark:bg-gray-800/40 lg:block">
-        <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-[56px] items-center border-b px-6">
-            <Link className="flex items-center gap-2 font-semibold" href="#" prefetch={false}>
-              <Package2Icon className="h-6 w-6" />
-              <span>Acme Inc</span>
-            </Link>
-            <Button className="ml-auto h-8 w-8" size="icon" variant="outline">
-              <BellIcon className="h-4 w-4" />
-              <span className="sr-only">Toggle notifications</span>
-            </Button>
-          </div>
-          <div className="flex-1 overflow-auto py-2">
-            <nav className="grid items-start px-4 text-sm font-medium">
-              <Link
-                className="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900 transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50"
-                href="#"
-                prefetch={false}
-              >
-                <HomeIcon className="h-4 w-4" />
-                Overview
-              </Link>
-              <Link
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                href="#"
-                prefetch={false}
-              >
-                <LineChartIcon className="h-4 w-4" />
-                Analysis
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </div>
+     <SideBar />
       <div className="flex flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
           <div className="flex flex-1 items-center gap-4">
