@@ -10,6 +10,15 @@ const nextConfig = {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_PUBLIC_DATABASE_URL: process.env.NEXT_PUBLIC_DATABASE_URL,
   },
+  redirects: async() => {
+    return [
+      {
+        source: "/",
+        destination: "/overview",
+        permanent: true,
+      }
+    ]
+  }
 };
 
 export default nextConfig;
