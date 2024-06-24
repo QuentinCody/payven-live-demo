@@ -17,7 +17,7 @@ interface DatePickerWithRangeProps extends React.HTMLAttributes<HTMLDivElement> 
 
 export type DateRange = {
   from: Date | undefined;
-  to: Date | undefined;
+  to?: Date | undefined;
 };
 
 type TimeZoneOption = {
