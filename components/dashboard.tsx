@@ -22,9 +22,19 @@ export default function Component() {
 
   useEffect(() => {
     if (dateRange?.from && dateRange.to) {
-      const startDate = format(dateRange.from, 'yyyy-MM-dd');
-      const endDate = format(dateRange.to, 'yyyy-MM-dd');
-      fetchData(startDate, endDate);
+      // Clone the dates to avoid mutating the original state directly
+      const startDate = new Date(dateRange.from);
+      startDate.setHours(0, 0, 0, 0);
+
+      const endDate = new Date(dateRange.to);
+      endDate.setHours(23, 59, 59, 999);
+
+      // Now format the dates into strings
+      const formattedStartDate = format(startDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+      const formattedEndDate = format(endDate, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+      // Use the formatted dates for fetching data
+      fetchData(formattedStartDate, formattedEndDate);
     }
   }, [dateRange]);
 
