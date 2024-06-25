@@ -1,11 +1,12 @@
 import axios from 'axios';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+//fetchCustomerCount
 
 export const fetchCustomerCount = async (startDate: string, endDate: string) => {
   try {
-    const response = await axios.get(`${apiUrl}/customers/count`, {
-      params: { start_date: startDate, end_date: endDate }
+    const response = await axios.get(`${apiUrl}/customers/count/`, {
+      params: { start_date: startDate, end_date: endDate },
     });
     return response.data.total_customers;
   } catch (error) {
@@ -14,10 +15,12 @@ export const fetchCustomerCount = async (startDate: string, endDate: string) => 
   }
 };
 
+
+//fetchTransactionCount
 export const fetchTransactionCount = async (startDate: string, endDate: string) => {
   try {
-    const response = await axios.get(`${apiUrl}/transactions/count`, {
-      params: { start_date: startDate, end_date: endDate }
+    const response = await axios.get(`${apiUrl}/transactions/count/`, {
+      params: { start_date: startDate, end_date: endDate },
     });
     return response.data.total_transactions;
   } catch (error) {
@@ -26,10 +29,11 @@ export const fetchTransactionCount = async (startDate: string, endDate: string) 
   }
 };
 
+//fetchTransactionAmount
 export const fetchTransactionAmount = async (startDate: string, endDate: string) => {
   try {
-    const response = await axios.get(`${apiUrl}/transactions/amount`, {
-      params: { start_date: startDate, end_date: endDate }
+    const response = await axios.get(`${apiUrl}/transactions/amount/`, {
+      params: { start_date: startDate, end_date: endDate },
     });
     return response.data.sum_transactions;
   } catch (error) {
@@ -38,10 +42,12 @@ export const fetchTransactionAmount = async (startDate: string, endDate: string)
   }
 };
 
+
+//fetchHighestVolumeDay
 export const fetchHighestVolumeDay = async (startDate: string, endDate: string) => {
   try {
-    const response = await axios.get(`${apiUrl}/highest_volume_day`, {
-      params: { start_date: startDate, end_date: endDate }
+    const response = await axios.get(`${apiUrl}/highest_volume_day/`, {
+      params: { start_date: startDate, end_date: endDate },
     });
     return response.data.highest_volume_day;
   } catch (error) {
@@ -49,3 +55,6 @@ export const fetchHighestVolumeDay = async (startDate: string, endDate: string) 
     throw error;
   }
 };
+
+
+// Similar functions for fetchTransactionCount, fetchTransactionAmount, and fetchHighestVolumeDay

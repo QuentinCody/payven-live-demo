@@ -6,9 +6,12 @@ import { LineChart } from "@/components/charts/LineChart";
 import { useEffect, useState } from 'react';
 import { DatePickerWithRange, addDays, DateRange } from "@/components/ui/datepicker";
 import LiveFeed from "@/components/layout/LiveFeed";
+import axios from 'axios';
 import { format } from 'date-fns';
 import SideBar from "@/components/layout/SideBar";
-import { fetchCustomerCount, fetchTransactionCount, fetchTransactionAmount, fetchHighestVolumeDay } from '@/api/apiService';
+
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+console.log(apiUrl);
 
 export default function Component() {
   const [customerCount, setCustomerCount] = useState(0);
@@ -19,6 +22,32 @@ export default function Component() {
     from: addDays(new Date(), -7),
     to: new Date(),
   });
+
+  const fetchData = (startDate: string, endDate: string) => {
+    axios.get(`${apiUrl}/customers/count/`, {
+      params: { start_date: startDate, end_date: endDate }
+    })
+      .then(response => setCustomerCount(response.data.total_customers))
+      .catch(error => console.error('Error fetching customer count:', error));
+
+    axios.get(`${apiUrl}/transactions/count/`, {
+      params: { start_date: startDate, end_date: endDate }
+    })
+      .then(response => setTransactionCount(response.data.total_transactions))
+      .catch(error => console.error('Error fetching transaction count:', error));
+
+    axios.get(`${apiUrl}/transactions/amount/`, {
+      params: { start_date: startDate, end_date: endDate }
+    })
+      .then(response => setTransactionAmount(response.data.sum_transactions))
+      .catch(error => console.error('Error fetching transaction amount:', error));
+
+    axios.get(`${apiUrl}/highest_volume_day/`, {
+      params: { start_date: startDate, end_date: endDate }
+    })
+      .then(response => setHighestVolumeDay(response.data.highest_volume_day))
+      .catch(error => console.error('Error fetching highest volume day:', error));
+  };
 
   useEffect(() => {
     if (dateRange?.from && dateRange.to) {
@@ -38,31 +67,10 @@ export default function Component() {
     }
   }, [dateRange]);
 
-  
-
-  const fetchData = async (startDate: string, endDate: string) => {
-    try {
-      const customerCount = await fetchCustomerCount(startDate, endDate);
-      setCustomerCount(customerCount);
-
-      const transactionCount = await fetchTransactionCount(startDate, endDate);
-      setTransactionCount(transactionCount);
-
-      const transactionAmount = await fetchTransactionAmount(startDate, endDate);
-      setTransactionAmount(transactionAmount);
-
-      const highestVolumeDay = await fetchHighestVolumeDay(startDate, endDate);
-      setHighestVolumeDay(highestVolumeDay);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
   const handleDateChange = (range: DateRange | undefined) => {
     setDateRange(range);
   };
 
-  
   return (
     <div key="1" className="grid min-h-screen w-full grid-cols-[280px_1fr] dark:bg-gray-950">
      <SideBar />
