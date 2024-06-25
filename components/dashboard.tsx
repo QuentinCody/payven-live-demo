@@ -161,7 +161,7 @@ export default function Component() {
                 </CardHeader>
                 <CardContent>
                 <p className="text-xs text-muted-foreground">
-                +20.1% from last month
+                +23.1% from last month
                 </p>
                 </CardContent>
                   
