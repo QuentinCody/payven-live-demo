@@ -4,6 +4,7 @@ import * as React from "react"
 import { addDays as addDaysFns, format } from "date-fns"
 import { toZonedTime } from 'date-fns-tz'
 import Select from 'react-select'
+import moment from 'moment-timezone'
 import { CalendarClockIcon } from "@/components/icons/CalendarClockIcon"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -32,10 +33,10 @@ export function DatePickerWithRange({
     from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     to: new Date(),
   })
-  const [timeZone, setTimeZone] = React.useState(Intl.DateTimeFormat().resolvedOptions().timeZone)
+  const [timeZone, setTimeZone] = React.useState(moment.tz.guess())
 
   const timeZoneOptions: TimeZoneOption[] = React.useMemo(() => {
-    return Intl.supportedValuesOf('timeZone').map(tz => ({ value: tz, label: tz }))
+    return moment.tz.names().map(tz => ({ value: tz, label: tz }))
   }, [])
 
   const handleDateChange = (newDate: DateRange | undefined) => {
