@@ -10,7 +10,8 @@ export default function DetailsPage() {
         Details
       </h1>
       <div className="mt-4 sm:mt-6 lg:mt-10">
-        <DataTable columns={columns as ColumnDef<TransactionWithCustomer>[]} /> // Cast the columns prop to the correct type
+        <DataTable columns={columns as ColumnDef<TransactionWithCustomer>[]} /> 
+          {/* Cast the columns prop to the correct type */}
       </div>
     </>
   )
