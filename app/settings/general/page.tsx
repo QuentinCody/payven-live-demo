@@ -1,20 +1,20 @@
 "use client"
-import { Button } from "@/components/tremor/Button"
-import { Card } from "@/components/tremor/Card"
-import { Checkbox } from "@/components/tremor/Checkbox"
-import { Divider } from "@/components/tremor/Divider"
-import { Input } from "@/components/tremor/Input"
-import { Label } from "@/components/tremor/Label"
+import { Button } from "@/components/ui/tremor/Button"
+import { Card } from "@/components/ui/tremor/Card"
+import { Checkbox } from "@/components/ui/tremor/Checkbox"
+import { Divider } from "@/components/ui/tremor/Divider"
+import { Input } from "@/components/ui/tremor/Input"
+import { Label } from "@/components/ui/tremor/Label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/tremor/Select"
+} from "@/components/ui/tremor/Select"
 import { RiExternalLinkLine } from "@remixicon/react"
 
-import { roles } from "@/components/tremor/data/data"
+import { roles } from "@/components/ui/tremor/data/data"
 
 export default function General() {
   return (

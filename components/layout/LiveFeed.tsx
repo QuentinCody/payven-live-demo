@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/shadcn/avatar';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/shadcn/card';
 import { CircleUserRound } from 'lucide-react';
 
 interface Transaction {
@@ -25,7 +25,7 @@ const LiveFeed: React.FC = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/transactions/recent`);
+        const response = await axios.get(`${apiUrl}/transactions/recent`);
         setTransactions(response.data);
       } catch (error) {
         console.error('Error fetching transactions:', error);

@@ -17,12 +17,12 @@ To read more about using these font, please visit the Next.js documentation:
 - App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
 - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 **/
-import { Button } from "@/components/ui/button"
-import { PopoverTrigger, PopoverContent, Popover } from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
-import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
-import { ResizablePanel, ResizableHandle, ResizablePanelGroup } from "@/components/ui/resizable"
-import { Switch } from "@/components/ui/switch"
+import { Button } from "@/components/ui/shadcn/button"
+import { PopoverTrigger, PopoverContent, Popover } from "@/components/ui/shadcn/popover"
+import { Calendar } from "@/components/ui/shadcn/calendar"
+import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/shadcn/card"
+import { ResizablePanel, ResizableHandle, ResizablePanelGroup } from "@/components/ui/shadcn/resizable"
+import { Switch } from "@/components/ui/shadcn/switch"
 import { ArrowUpIcon } from "@/components/icons/ArrowUpIcon"
 import { ArrowDownIcon } from "@/components/icons/ArrowDownIcon"
 import {CalendarDaysIcon } from "@/components/icons/CalendarDays"

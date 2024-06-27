@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Package2Icon } from '@/components/icons/Package2Icon';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/shadcn/button';
 import { BellIcon } from '@/components/icons/BellIcon';
 import { HomeIcon } from '@/components/icons/HomeIcon';
 import { LineChartIcon } from '@/components/icons/LineChartIcon';

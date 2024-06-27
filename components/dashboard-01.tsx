@@ -15,16 +15,16 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/shadcn/avatar"
+import { Badge } from "@/components/ui/shadcn/badge"
+import { Button } from "@/components/ui/shadcn/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/shadcn/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,9 +32,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+} from "@/components/ui/shadcn/dropdown-menu"
+import { Input } from "@/components/ui/shadcn/input"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/shadcn/sheet"
 import {
   Table,
   TableBody,
@@ -42,7 +42,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/shadcn/table"
 
 export const description =
   "An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image."

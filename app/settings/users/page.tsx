@@ -1,22 +1,22 @@
 "use client"
 
-import { Button } from "@/components/tremor/Button"
+import { Button } from "@/components/ui/tremor/Button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/tremor/Dropdown"
+} from "@/components/ui/tremor/Dropdown"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/tremor/Select"
-import { Tooltip } from "@/components/tremor/Tooltip"
-import { ModalAddUser } from "@/components/tremor/ui/settings/ModalAddUser"
-import { invitedUsers, roles, users } from "@/components/tremor/data/data"
+} from "@/components/ui/tremor/Select"
+import { Tooltip } from "@/components/ui/tremor/Tooltip"
+import { ModalAddUser } from "@/components/ui/tremor/ui/settings/ModalAddUser"
+import { invitedUsers, roles, users } from "@/components/ui/tremor/data/data"
 import { RiAddLine, RiMore2Fill } from "@remixicon/react"
 
 export default function Users() {

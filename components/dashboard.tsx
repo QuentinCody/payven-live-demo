@@ -1,14 +1,14 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardDescription, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/shadcn/button";
+import { Card, CardHeader, CardDescription, CardTitle, CardContent } from "@/components/ui/shadcn/card";
 import { MenuIcon } from "@/components/icons/MenuIcon";
 import { LineChart } from "@/components/charts/LineChart";
 import { useEffect, useState } from 'react';
-import { DatePickerWithRange, addDays, DateRange } from "@/components/ui/datepicker";
+import { DatePickerWithRange, addDays, DateRange } from "@/components/ui/shadcn/datepicker";
 import LiveFeed from "@/components/layout/LiveFeed";
 import axios from 'axios';
 import { format } from 'date-fns';
-import SideBar from "@/components/layout/SideBar";
+// import { Sidebar } from "@/components/ui/tremor/ui/navigation/Sidebar";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 console.log(apiUrl);
@@ -24,25 +24,25 @@ export default function Component() {
   });
 
   const fetchData = (startDate: string, endDate: string) => {
-    axios.get(`${apiUrl}/customers/count/`, {
+    axios.get(`${apiUrl}/customers/count`, {
       params: { start_date: startDate, end_date: endDate }
     })
       .then(response => setCustomerCount(response.data.total_customers))
       .catch(error => console.error('Error fetching customer count:', error));
 
-    axios.get(`${apiUrl}/transactions/count/`, {
+    axios.get(`${apiUrl}/transactions/count`, {
       params: { start_date: startDate, end_date: endDate }
     })
       .then(response => setTransactionCount(response.data.total_transactions))
       .catch(error => console.error('Error fetching transaction count:', error));
 
-    axios.get(`${apiUrl}/transactions/amount/`, {
+    axios.get(`${apiUrl}/transactions/amount`, {
       params: { start_date: startDate, end_date: endDate }
     })
       .then(response => setTransactionAmount(response.data.sum_transactions))
       .catch(error => console.error('Error fetching transaction amount:', error));
 
-    axios.get(`${apiUrl}/highest_volume_day/`, {
+    axios.get(`${apiUrl}/highest_volume_day`, {
       params: { start_date: startDate, end_date: endDate }
     })
       .then(response => setHighestVolumeDay(response.data.highest_volume_day))
@@ -73,7 +73,7 @@ export default function Component() {
 
   return (
     <div key="1" className="grid min-h-screen w-full grid-cols-[280px_1fr] dark:bg-gray-950">
-     <SideBar />
+     {/* <Sidebar /> */}
       <div className="flex flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
           <div className="flex flex-1 items-center gap-4">
