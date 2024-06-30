@@ -2,12 +2,17 @@ import { useState, useEffect, useCallback } from 'react';
 
 
 const getUserPreferredTimezone = () => {
-  const storedTimezone = localStorage.getItem('userTimeZone');
-  return storedTimezone || 'America/New_York';
+  if (typeof window !== 'undefined') { // Check if running on client side
+    const storedTimezone = localStorage.getItem('userTimeZone');
+    return storedTimezone || 'America/New_York';
+  }
+  return 'America/New_York'; // Default timezone if not on client side
 }
 
 const setUserPreferredTimezone = (timezone: string) => {
-  localStorage.setItem('userTimeZone', timezone);
+  if (typeof window !== 'undefined') { // Check if running on client side
+    localStorage.setItem('userTimeZone', timezone);
+  }
 }
 
 export function useTimezone() {
