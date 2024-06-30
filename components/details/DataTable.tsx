@@ -1,24 +1,32 @@
-"use client"
+"use client";
 
-import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/ui/tremor/Table"
-import { cn } from "@/lib/utils"
-import * as React from "react"
-import { DataTableBulkEditor } from "@/components/ui/tremor/ui/data-table/DataTableBulkEditor"
-import { Filterbar } from "@/components/ui/tremor/ui/data-table/DataTableFilterbar"
-import { DataTablePagination } from "@/components/ui/tremor/ui/data-table/DataTablePagination"
-import { ColumnDef, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"
-import { useTransactions } from "@/lib/hooks/useTransactions"
-import { TransactionWithCustomer } from "@/components/ui/tremor/data/schema"
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/ui/tremor/Table";
+import { cn } from "@/lib/utils";
+import * as React from "react";
+import { DataTableBulkEditor } from "@/components/ui/tremor/ui/data-table/DataTableBulkEditor";
+import { Filterbar } from "@/components/ui/tremor/ui/data-table/DataTableFilterbar";
+import { DataTablePagination } from "@/components/ui/tremor/ui/data-table/DataTablePagination";
+import { ColumnDef, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
+import { useTransactions } from "@/lib/hooks/useTransactions";
+import { TransactionWithCustomer } from "@/components/ui/tremor/data/schema";
+import { useTimezone } from "@/lib/hooks/useTimezone";
 
 interface DataTableProps {
-  columns: ColumnDef<TransactionWithCustomer>[]; // Use Transaction type directly
+  columns: ColumnDef<TransactionWithCustomer>[];
+  formatDate: (dateString: string) => string; // Add formatDate prop
 }
 
-export function DataTable({ columns }: DataTableProps) {
-  const [pageIndex, setPageIndex]   = React.useState(0)
-  const pageSize = 20
-  const [rowSelection, setRowSelection] = React.useState({})
-  const { transactions, totalTransactions, isLoading, error } = useTransactions(pageIndex + 1 , pageSize)
+export function DataTable({ columns, formatDate }: DataTableProps) {
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const pageSize = 20;
+  const [rowSelection, setRowSelection] = React.useState({});
+  const { transactions, totalTransactions, isLoading, error } = useTransactions(pageIndex + 1, pageSize);
+  const { timezone } = useTimezone();
+
+  React.useEffect(() => {
+    console.log("Timezone:", timezone);
+    console.log("Transactions:", transactions);
+  }, [timezone, transactions]);
 
   const table = useReactTable({
     data: transactions,
@@ -44,10 +52,10 @@ export function DataTable({ columns }: DataTableProps) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
-  })
+  });
 
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div>Error: {error.message}</div>
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <>
@@ -75,7 +83,9 @@ export function DataTable({ columns }: DataTableProps) {
                         {index === 0 && row.getIsSelected() && (
                           <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600 dark:bg-indigo-500" />
                         )}
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {cell.column.id === 'created_at' || cell.column.id === 'updated_at'
+                          ? (console.log(`Date before formatting: ${cell.getValue()}`), formatDate(cell.getValue() as string))
+                          : flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}
                   </TableRow>
@@ -94,5 +104,5 @@ export function DataTable({ columns }: DataTableProps) {
         <DataTablePagination table={table} pageSize={pageSize} totalRows={totalTransactions} />
       </div>
     </>
-  )
+  );
 }

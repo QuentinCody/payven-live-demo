@@ -1,21 +1,29 @@
+"use client"
 import { columns } from "@/components/details/columns"
 import { DataTable } from "@/components/details/DataTable"
-import { ColumnDef } from "@tanstack/react-table" // Import the correct type
-import { TransactionWithCustomer } from "@/components/ui/tremor/data/schema" 
+import { ColumnDef } from "@tanstack/react-table"
+import { TransactionWithCustomer } from "@/components/ui/tremor/data/schema"
+import { useTimezone } from "@/lib/hooks/useTimezone"
 
 export default function DetailsPage() {
+  const { formatDate } = useTimezone();
+
   return (
     <>
       <h1 className="text-lg font-semibold text-gray-900 sm:text-xl dark:text-gray-50">
         Details
       </h1>
       <div className="mt-4 sm:mt-6 lg:mt-10">
-        <DataTable columns={columns as ColumnDef<TransactionWithCustomer>[]} /> 
-          {/* Cast the columns prop to the correct type */}
+        <DataTable 
+          columns={columns as ColumnDef<TransactionWithCustomer>[]} 
+          formatDate={formatDate}
+        />
       </div>
     </>
   )
 }
+
+
 // "use client"
 
 // import { DataTable } from "@/components/details/DataTable"

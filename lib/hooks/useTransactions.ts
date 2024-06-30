@@ -15,8 +15,10 @@ export function useTransactions(page: number, pageSize: number) {
         const result = await fetchTransactions(page, pageSize)
         setTransactions(result.data)
         setTotalTransactions(result.total)
+        console.log("Fetched transactions:", result.data)
       } catch (e) {
         setError(e as Error)
+        console.log("Error fetching transactions:", e)
       } finally {
         setIsLoading(false)
       }

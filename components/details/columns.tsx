@@ -1,5 +1,6 @@
+//@/components/details/columns.tsx
 "use client"
-
+import React from 'react'
 import { Badge, BadgeProps } from "@/components/ui/tremor/Badge"
 import { Checkbox } from "@/components/ui/tremor/Checkbox"
 import { Transaction } from "@/components/ui/tremor/data/schema"
@@ -8,8 +9,19 @@ import { ColumnDef, createColumnHelper } from "@tanstack/react-table"
 import { DataTableColumnHeader } from "@/components/ui/tremor/ui/data-table/DataTableColumnHeader"
 import { DataTableRowActions } from "@/components/ui/tremor/ui/data-table/DataTableRowActions"
 import { TransactionWithCustomer } from "@/components/ui/tremor/data/schema"
+import { useTimezone } from '@/lib/hooks/useTimezone'
+
+
 
 const columnHelper = createColumnHelper<TransactionWithCustomer>()
+
+const DateCell = ({ value }: { value: string }) => {
+  const { formatDate } = useTimezone();
+  const formattedDate = React.useMemo(() => formatDate(value), [value, formatDate]);
+
+  return <span>{formattedDate}</span>;
+};
+
 
 export const columns = [
   columnHelper.display({
@@ -78,10 +90,7 @@ export const columns = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Date" />
     ),
-    cell: ({ getValue }) => {
-      const date = new Date(getValue() as string)
-      return date.toLocaleString()
-    },
+    cell: ({ getValue }) => <DateCell value={getValue() as string} />,
     enableSorting: true,
   }),
   columnHelper.display({

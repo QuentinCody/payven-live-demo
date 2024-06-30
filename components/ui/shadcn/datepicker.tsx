@@ -8,7 +8,8 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/shadcn/button"
 import { Calendar } from "@/components/ui/shadcn/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/shadcn/popover"
-import { utcToZonedTime, zonedTimeToUTC, formatInZone } from './customTimezoneFunctions'
+import { utcToZonedTime, zonedTimeToUTC, formatInZone } from '../../../lib/utils/customTimezoneFunctions'
+import { useTimezone } from '@/lib/hooks/useTimezone'
 
 interface DatePickerWithRangeProps extends React.HTMLAttributes<HTMLDivElement> {
   onDateChange: (range: DateRange | undefined) => void;

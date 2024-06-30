@@ -2,6 +2,9 @@
 
 "use client"
 
+import { useTimezone } from '@/lib/hooks/useTimezone'
+import { utcToZonedTime, zonedTimeToUTC, formatInZone } from '@/lib/utils/customTimezoneFunctions'
+
 import { Time } from "@internationalized/date"
 import * as PopoverPrimitives from "@radix-ui/react-popover"
 import {
@@ -29,17 +32,12 @@ import { Calendar as CalendarPrimitive, type Matcher } from "./Calendar"
 //#region TimeInput
 // ============================================================================
 
+
 const isBrowserLocaleClockType24h = () => {
-  const language =
-    typeof window !== "undefined" ? window.navigator.language : "en-US"
-
-  const hr = new Intl.DateTimeFormat(language, {
-    hour: "numeric",
-  }).format()
-
+  const language = typeof window !== 'undefined' ? window.navigator.language : 'en-US'
+  const hr = new Intl.DateTimeFormat(language, { hour: 'numeric' }).format()
   return Number.isInteger(Number(hr))
 }
-
 type TimeSegmentProps = {
   segment: DateSegment
   state: DateFieldState
@@ -400,24 +398,30 @@ PresetContainer.displayName = "DatePicker.PresetContainer"
 //#region Date Picker Shared
 // ============================================================================
 
+
+
 const formatDate = (
   date: Date,
   locale: Locale,
+  timeZone: string,
   includeTime?: boolean,
 ): string => {
-  const usesAmPm = !isBrowserLocaleClockType24h()
-  let dateString: string
+  console.log('Input date (UTC):', date.toISOString());
+  console.log('Formatting for timezone:', timeZone);
 
-  if (includeTime) {
-    dateString = usesAmPm
-      ? format(date, "dd MMM, yyyy h:mm a", { locale })
-      : format(date, "dd MMM, yyyy HH:mm", { locale })
-  } else {
-    dateString = format(date, "dd MMM, yyyy", { locale })
+  try {
+    const zonedDate = utcToZonedTime(date, timeZone)
+    const formatString = includeTime ? "dd MMM, yyyy HH:mm:ss" : "dd MMM, yyyy"
+    const formattedDate = formatInZone(zonedDate, timeZone, formatString)
+    console.log('Formatted date:', formattedDate);
+    return formattedDate;
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return 'Invalid Date';
   }
-
-  return dateString
 }
+
+
 
 type CalendarProps = {
   fromYear?: number
@@ -488,6 +492,7 @@ const SingleDatePicker = ({
   align = "center",
   ...props
 }: SingleProps) => {
+  const { timezone } = useTimezone()
   const [open, setOpen] = React.useState(false)
   const [date, setDate] = React.useState<Date | undefined>(
     value ?? defaultValue ?? undefined,
@@ -543,7 +548,7 @@ const SingleDatePicker = ({
   }
 
   const onDateChange = (date: Date | undefined) => {
-    const newDate = date
+    const newDate = date ? zonedTimeToUTC(date, timezone) : undefined
     if (showTimePicker) {
       if (newDate && !time) {
         setTime(new Time(0, 0))
@@ -581,8 +586,8 @@ const SingleDatePicker = ({
       return null
     }
 
-    return formatDate(date, locale, showTimePicker)
-  }, [date, locale, showTimePicker])
+    return formatDate(date, locale, timezone, showTimePicker)
+  }, [date, locale, timezone, showTimePicker])
 
   const onApply = () => {
     setOpen(false)
@@ -713,6 +718,7 @@ const RangeDatePicker = ({
   className,
   ...props
 }: RangeProps) => {
+  const { timezone } = useTimezone()
   const [open, setOpen] = React.useState(false)
   const [range, setRange] = React.useState<DateRange | undefined>(
     value ?? defaultValue ?? undefined,
@@ -889,9 +895,9 @@ const RangeDatePicker = ({
     }
 
     return `${
-      range.from ? formatDate(range.from, locale, showTimePicker) : ""
-    } - ${range.to ? formatDate(range.to, locale, showTimePicker) : ""}`
-  }, [range, locale, showTimePicker])
+      range.from ? formatDate(range.from, locale, timezone, showTimePicker) : ""
+    } - ${range.to ? formatDate(range.to, locale, timezone, showTimePicker) : ""}`
+  }, [range, locale, timezone, showTimePicker])
 
   const onApply = () => {
     setOpen(false)

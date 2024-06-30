@@ -5,10 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/shadcn/table';
 import { TransactionChart } from '../../../components/charts/TransactionChart';
 import { useState, useEffect } from 'react';
+import { useTimezone } from "@/lib/hooks/useTimezone"
 
 export default function OverviewPage() {
   const { transactions, isLoading, error } = useTransactions(1, 10);
   const [dailyTotals, setDailyTotals] = useState([]);
+  const { formatDate } = useTimezone();
 
   useEffect(() => {
     async function fetchDailyTotals() {
@@ -47,7 +49,7 @@ export default function OverviewPage() {
                     <TableCell>{transaction.id}</TableCell>
                     <TableCell>{`${transaction.amount_value} ${transaction.amount_currency}`}</TableCell>
                     <TableCell>{transaction.status}</TableCell>
-                    <TableCell>{new Date(transaction.created_at).toLocaleString()}</TableCell>
+                    <TableCell>{formatDate(transaction.created_at)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

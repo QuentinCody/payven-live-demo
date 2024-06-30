@@ -15,13 +15,67 @@ import {
 import { RiExternalLinkLine } from "@remixicon/react"
 
 import { roles } from "@/components/ui/tremor/data/data"
+import { useTimezone } from "@/lib/hooks/useTimezone"
+import { getUserPreferredTimezone } from "@/lib/utils/customTimezoneFunctions"
+import { useState, useEffect } from "react"
+
+const timezones = [
+  "America/New_York",
+  "America/Chicago",
+  "America/Denver",
+  "America/Los_Angeles",
+  "America/Anchorage",
+  "America/Honolulu",
+  "America/Toronto",
+  "Europe/London",
+  "Europe/Paris",
+  "Asia/Tokyo",
+  "Australia/Sydney",
+  // Add more timezones as needed
+]
 
 export default function General() {
+  const { timezone, updateTimezone, formatDate } = useTimezone();
+  const [selectedTimezone, setSelectedTimezone] = useState(timezone);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [testOutput, setTestOutput] = useState('');
+
+  useEffect(() => {
+    setSelectedTimezone(timezone);
+  }, [timezone]);
+
+  const handleTimezoneChange = (value: string) => {
+    setSelectedTimezone(value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    updateTimezone(selectedTimezone);
+    setSuccessMessage('Settings saved successfully!');
+    setTimeout(() => setSuccessMessage(''), 3000);
+    console.log("Settings saved. New timezone:", selectedTimezone);
+  };
+
+  const testTimezoneConversion = () => {
+  const testDate = '2024-06-30T15:12:35';
+  const formattedDate = formatDate(testDate);
+
+    
+  const output = `
+   Input UTC Date: ${testDate}
+    Formatted Date: ${formattedDate}
+    Tested Timezone: ${selectedTimezone}
+    `;
+  
+  setTestOutput(output);
+  console.log(output);
+};
+
   return (
     <>
       <div className="space-y-10">
         <section aria-labelledby="personal-information">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 gap-x-14 gap-y-8 md:grid-cols-3">
               <div>
                 <h2
@@ -117,9 +171,46 @@ export default function General() {
                       Roles can only be changed by system admin.
                     </p>
                   </div>
+                  <div className="col-span-full sm:col-span-3">
+                    <Label htmlFor="timezone" className="font-medium">
+                      Timezone
+                    </Label>
+                    <Select
+                      value={selectedTimezone}
+                      onValueChange={handleTimezoneChange}
+                    >
+                      <SelectTrigger
+                        name="timezone"
+                        id="timezone"
+                        className="mt-2"
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {timezones.map((tz) => (
+                          <SelectItem key={tz} value={tz}>
+                            {tz}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="col-span-full">
+                    <Button type="button" onClick={testTimezoneConversion}>
+                      Test Timezone Conversion
+                    </Button>
+                    {testOutput && (
+                      <pre className="mt-4 p-4 bg-gray-100 rounded">
+                        {testOutput}
+                      </pre>
+                    )}
+                  </div>
                   <div className="col-span-full mt-6 flex justify-end">
                     <Button type="submit">Save settings</Button>
                   </div>
+                  {successMessage && (
+                    <div className="col-span-full mt-4 text-green-600">{successMessage}</div>
+                  )}
                 </div>
               </div>
             </div>
