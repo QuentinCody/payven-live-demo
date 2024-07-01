@@ -61,7 +61,7 @@ const TableHeaderCell = React.forwardRef<
     ref={forwardedRef}
     className={cn(
       // base
-      "border-b px-4 py-3.5 text-left text-sm font-semibold",
+      "border-b px-4 py-3.5 text-left text-sm font-semibold select-text",
       // text color
       "text-gray-900 dark:text-gray-50",
       // border color
@@ -118,9 +118,9 @@ const TableCell = React.forwardRef<
     ref={forwardedRef}
     className={cn(
       // base
-      "p-4 text-sm",
+      "p-4 text-sm select-text",
       // text color
-      "text-gray-600 dark:text-gray-400",
+      "text-gray-600 dark:text-gray-400 ",
       className,
     )}
     {...props}
